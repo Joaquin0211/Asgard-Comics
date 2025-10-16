@@ -6,10 +6,12 @@ import Register from './views/Register';
 import OwnerDashboard from './views/OwnerDashboard';
 import WriterDashboard from './views/WriterDashboard';
 import UserDashboard from './views/UserDashboard';
+import Navbar from './components/Navbar';
 
 const App = () => {
     return (
         <Router>
+            <Navbar />
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
