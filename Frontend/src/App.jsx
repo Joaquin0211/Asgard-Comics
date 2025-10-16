@@ -7,6 +7,8 @@ import OwnerDashboard from './views/OwnerDashboard';
 import WriterDashboard from './views/WriterDashboard';
 import UserDashboard from './views/UserDashboard';
 import Navbar from './components/Navbar';
+import NewsletterBar from './components/NewsletterBar';
+import FooterInfo from './components/FooterInfo';
 
 const App = () => {
     return (
@@ -20,6 +22,8 @@ const App = () => {
                 <Route path="/writer-dashboard" element={<WriterDashboard />} />
                 <Route path="/user-dashboard" element={<UserDashboard />} />
             </Routes>
+            <NewsletterBar />
+            <FooterInfo />
         </Router>
     );
 };
