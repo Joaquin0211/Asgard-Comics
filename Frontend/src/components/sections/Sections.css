@@ -1,12 +1,22 @@
+/* Nordic beige palette */
+:root {
+    --nordic-beige-bg: #F2EDE3;  /* fondo principal cálido */
+    --nordic-beige-soft: #EFE7DD; /* variante más clara */
+    --nordic-card-bg: #FFFFFF;    /* cartas sobre el beige */
+    --nordic-ink: #2b2b2b;        /* texto principal */
+    --nordic-muted: #6b6157;      /* texto secundario cálido */
+}
+
 .section {
     padding: 2rem 0;
     margin-bottom: 2rem;
+    background: var(--nordic-beige-bg);
 }
 
 .section h2 {
     text-align: center;
     margin-bottom: 2rem;
-    color: #2c3e50;
+    color: var(--nordic-ink);
     font-size: 2rem;
 }
 
@@ -18,7 +28,7 @@
 }
 
 .card-image.placeholder {
-    background-color: #e0e0e0;
+    background-color: #E6DED3; /* gris cálido */
     height: 200px;
     border-radius: 8px;
     margin-bottom: 1rem;
@@ -26,7 +36,7 @@
 
 /* Weekly News Section */
 .news-card {
-    background: white;
+    background: var(--nordic-card-bg);
     border-radius: 10px;
     padding: 1rem;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -39,7 +49,7 @@
 
 /* Preorders Section */
 .preorder-card {
-    background: white;
+    background: var(--nordic-card-bg);
     border-radius: 10px;
     padding: 1rem;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -62,7 +72,7 @@
 
 /* Figures Section */
 .figure-card {
-    background: white;
+    background: var(--nordic-card-bg);
     border-radius: 10px;
     padding: 1rem;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -71,7 +81,7 @@
 
 /* Promotions Section */
 .promotion-card {
-    background: #f39c12;
+    background: #f2b264; /* naranja más cálido y suave sobre beige */
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -79,7 +89,7 @@
 
 .promotion-content {
     padding: 1rem;
-    color: white;
+    color: #3a2f2a; /* mejor contraste con el beige cálido */
     text-align: center;
 }
 
@@ -91,7 +101,7 @@
 
 /* Trading Cards Section */
 .tcg-card {
-    background: white;
+    background: var(--nordic-card-bg);
     border-radius: 10px;
     padding: 1rem;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -106,7 +116,7 @@
 }
 
 .tags span {
-    background: #ecf0f1;
+    background: var(--nordic-beige-soft);
     padding: 0.25rem 0.5rem;
     border-radius: 15px;
     font-size: 0.8rem;

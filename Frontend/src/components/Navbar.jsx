@@ -61,9 +61,7 @@ const Navbar = () => {
                     {/* Logo */}
                     <div className="ac-logo">
                         <Link to="/" aria-label="Inicio">
-                            {/* Si agregas /logo.png en public, se usará. Sino se muestra el placeholder */}
-                            <img src="/logo.png" alt="Logo" onError={(e)=>{e.currentTarget.style.display='none'}} />
-                            <span className="ac-logo__placeholder">AC</span>
+                            <img src="/logo.svg" alt="Asgard Comics Logo" />
                         </Link>
                     </div>
 

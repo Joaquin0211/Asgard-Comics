@@ -1,6 +1,6 @@
 .ac-newsletter-bar {
-  background: #3a1a3a;
-  color: #fff;
+  background: #EFE7DD; /* beige nordic */
+  color: #2b2b2b;
   padding: 32px 0 16px 0;
   width: 100%;
 }
@@ -25,19 +25,19 @@
 }
 .ac-newsletter-bar__input {
   background: transparent;
-  border: 1px solid #bcaec0;
-  color: #fff;
+  border: 1px solid #b8ada2;
+  color: #2b2b2b;
   font-size: 1.1rem;
   padding: 10px 18px;
   border-radius: 2px;
   min-width: 260px;
 }
 .ac-newsletter-bar__input::placeholder {
-  color: #bcaec0;
+  color: #9b8f84;
 }
 .ac-newsletter-bar__btn {
   background: transparent;
-  color: #fff;
+  color: #2b2b2b;
   border: none;
   font-size: 1.1rem;
   font-weight: 500;
