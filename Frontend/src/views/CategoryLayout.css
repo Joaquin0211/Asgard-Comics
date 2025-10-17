@@ -1,0 +1,6 @@
+.category-container{ max-width:1200px; margin:0 auto; padding: 0 16px 48px; }
+.category-hero{ margin: 24px 0; text-align:center; }
+.category-hero h1{ font-size: 2.2rem; margin: 0 0 8px; color:#2b2b2b; }
+.category-hero p{ color:#6b6157; margin:0; }
+.category-content{ background:#ffffff; border:1px solid #e8e0d6; border-radius:10px; padding:24px; }
+.category-placeholder{ text-align:center; color:#6b6157; }
