@@ -198,3 +198,127 @@
   .ac-ticker{ transition: none !important; }
   .ac-navbar__top, .ac-logo img, .ac-logo__placeholder{ transition: none !important; }
 }
+
+/* Estilos para resultados de búsqueda */
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  text-decoration: none;
+  color: #333;
+  transition: background-color 0.2s;
+}
+
+.search-result-item:hover {
+  background-color: #f8f9fa;
+}
+
+.search-result-item:last-child {
+  border-bottom: none;
+}
+
+.search-result-item img {
+  width: 40px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.search-result-item div {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.search-result-item h4 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-result-item p {
+  margin: 0 0 4px 0;
+  font-size: 12px;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-result-item span {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e74c3c;
+}
+
+/* Hacer el carrito clickeable */
+.ac-icon--cart {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.ac-icon--cart:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Badge del carrito */
+.ac-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: #e74c3c;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 20px;
+}
+
+/* Responsive para búsqueda */
+@media (max-width: 768px) {
+  .search-results {
+    left: -20px;
+    right: -20px;
+  }
+  
+  .search-result-item {
+    padding: 8px;
+  }
+  
+  .search-result-item img {
+    width: 35px;
+    height: 45px;
+  }
+}
