@@ -2,7 +2,6 @@ package com.uade.tpo.AsgardComics.controllers;
 
 import com.uade.tpo.AsgardComics.entity.Comic;
 import com.uade.tpo.AsgardComics.services.comic.ComicService;
-import com.uade.tpo.AsgardComics.services.comic.ComicServiceImpl;
 import com.uade.tpo.AsgardComics.services.merchandising.MerchandisingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,14 +15,11 @@ import java.util.Optional;
 public class ComicController {
 
     private final ComicService comicService;
-    private final ComicServiceImpl comicServiceImpl;
     private final MerchandisingService merchandisingService;
 
     public ComicController(ComicService comicService, 
-                          ComicServiceImpl comicServiceImpl,
                           MerchandisingService merchandisingService) {
         this.comicService = comicService;
-        this.comicServiceImpl = comicServiceImpl;
         this.merchandisingService = merchandisingService;
     }
 
@@ -65,7 +61,10 @@ public class ComicController {
     // Comics en oferta
     @GetMapping("/sale")
     public List<Comic> getOnSale(@RequestParam Double maxPrice) {
-        return comicServiceImpl.findComicsOnSale(maxPrice);
+        // TODO: Implementar método findComicsOnSale en ComicService
+        return comicService.findAll().stream()
+            .filter(comic -> comic.getPrice() <= maxPrice)
+            .toList();
     }
 
     // Comics nuevos
