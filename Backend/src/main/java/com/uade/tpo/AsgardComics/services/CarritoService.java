@@ -1,8 +1,8 @@
 package com.uade.tpo.AsgardComics.services;
 
-import com.uade.tpo.AsgardComics.models.Carrito;
-import com.uade.tpo.AsgardComics.models.Comic;
-import com.uade.tpo.AsgardComics.models.User;
+import com.uade.tpo.AsgardComics.entity.Carrito;
+import com.uade.tpo.AsgardComics.entity.Comic;
+import com.uade.tpo.AsgardComics.entity.User;
 import com.uade.tpo.AsgardComics.repositories.CarritoRepository;
 import com.uade.tpo.AsgardComics.repositories.ComicRepository;
 import com.uade.tpo.AsgardComics.repositories.UserRepository;

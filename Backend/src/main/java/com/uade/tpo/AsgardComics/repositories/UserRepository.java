@@ -1,7 +1,8 @@
 package com.uade.tpo.AsgardComics.repositories;
 
-import com.uade.tpo.AsgardComics.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.uade.tpo.AsgardComics.entity.User;
 
 import java.util.Optional;
 import java.util.List;

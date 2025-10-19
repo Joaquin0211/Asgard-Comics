@@ -1,7 +1,7 @@
 // ...existing code...
 package com.uade.tpo.AsgardComics.controllers;
 
-import com.uade.tpo.AsgardComics.models.Purchase;
+import com.uade.tpo.AsgardComics.entity.Purchase;
 import com.uade.tpo.AsgardComics.services.PurchaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

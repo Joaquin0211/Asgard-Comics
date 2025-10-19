@@ -1,6 +1,6 @@
 package com.uade.tpo.AsgardComics.controllers;
 
-import com.uade.tpo.AsgardComics.models.Carrito;
+import com.uade.tpo.AsgardComics.entity.Carrito;
 import com.uade.tpo.AsgardComics.services.CarritoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

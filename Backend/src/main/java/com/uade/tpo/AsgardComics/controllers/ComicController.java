@@ -1,6 +1,6 @@
 package com.uade.tpo.AsgardComics.controllers;
 
-import com.uade.tpo.AsgardComics.models.Comic;
+import com.uade.tpo.AsgardComics.entity.Comic;
 import com.uade.tpo.AsgardComics.services.ComicService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

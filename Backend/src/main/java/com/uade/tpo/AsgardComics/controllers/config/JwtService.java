@@ -1,4 +1,4 @@
-package com.uade.tpo.demo.controllers.config;
+package com.uade.tpo.AsgardComics.controllers.config;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -30,10 +30,10 @@ public class JwtService {
             long expiration) {
         return Jwts
                 .builder()
-                .subject(userDetails.getUsername()) // prueba@hotmail.com
-                .issuedAt(new Date(System.currentTimeMillis()))
+                .setSubject(userDetails.getUsername()) // Usar setSubject en lugar de subject
+                .setIssuedAt(new Date(System.currentTimeMillis()))
                 .claim("Gisele", 1234567)
-                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSecretKey())
                 .compact();
     }
@@ -58,11 +58,11 @@ public class JwtService {
 
     private Claims extractAllClaims(String token) {
         return Jwts
-                .parser()
-                .verifyWith(getSecretKey())
+                .parserBuilder()
+                .setSigningKey(getSecretKey())
                 .build()
-                .parseSignedClaims(token)
-                .getPayload();
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     private SecretKey getSecretKey() {

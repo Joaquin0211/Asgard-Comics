@@ -1,6 +1,6 @@
 package com.uade.tpo.AsgardComics.dto.response;
 
-import com.uade.tpo.AsgardComics.models.Comic;
+import com.uade.tpo.AsgardComics.entity.Comic;
 
 public class ComicResponse {
     

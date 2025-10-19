@@ -1,8 +1,8 @@
 // ...existing code...
 package com.uade.tpo.AsgardComics.services;
 
-import com.uade.tpo.AsgardComics.models.Comic;
-import com.uade.tpo.AsgardComics.models.Purchase;
+import com.uade.tpo.AsgardComics.entity.Comic;
+import com.uade.tpo.AsgardComics.entity.Purchase;
 import com.uade.tpo.AsgardComics.repositories.ComicRepository;
 import com.uade.tpo.AsgardComics.repositories.PurchaseRepository;
 import com.uade.tpo.AsgardComics.repositories.UserRepository;

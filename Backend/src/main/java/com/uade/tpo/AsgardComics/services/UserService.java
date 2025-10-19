@@ -1,7 +1,7 @@
 // ...existing code...
 package com.uade.tpo.AsgardComics.services;
 
-import com.uade.tpo.AsgardComics.models.User;
+import com.uade.tpo.AsgardComics.entity.User;
 import com.uade.tpo.AsgardComics.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

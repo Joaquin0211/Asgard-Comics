@@ -1,4 +1,4 @@
-package com.uade.tpo.demo.controllers.config;
+package com.uade.tpo.AsgardComics.controllers.config;
 
 import java.io.IOException;
 

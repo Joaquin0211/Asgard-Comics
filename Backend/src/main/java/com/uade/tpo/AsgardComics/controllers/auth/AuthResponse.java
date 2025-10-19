@@ -1,6 +1,6 @@
 package com.uade.tpo.AsgardComics.controllers.auth;
 
-import com.uade.tpo.AsgardComics.models.User;
+import com.uade.tpo.AsgardComics.entity.User;
 
 public class AuthResponse {
     

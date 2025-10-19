@@ -1,4 +1,4 @@
-package com.uade.tpo.AsgardComics.models;
+package com.uade.tpo.AsgardComics.entity;
 
 import jakarta.persistence.*;
 

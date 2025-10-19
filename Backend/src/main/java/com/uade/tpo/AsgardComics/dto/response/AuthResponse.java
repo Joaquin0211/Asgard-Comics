@@ -1,6 +1,6 @@
 package com.uade.tpo.AsgardComics.dto.response;
 
-import com.uade.tpo.AsgardComics.models.User;
+import com.uade.tpo.AsgardComics.entity.User;
 
 public class AuthResponse {
     

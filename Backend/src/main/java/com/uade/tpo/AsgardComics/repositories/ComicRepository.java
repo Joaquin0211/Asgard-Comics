@@ -1,8 +1,9 @@
 // ...existing code...
 package com.uade.tpo.AsgardComics.repositories;
 
-import com.uade.tpo.AsgardComics.models.Comic;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.uade.tpo.AsgardComics.entity.Comic;
 
 import java.util.List;
 import java.util.Optional;
