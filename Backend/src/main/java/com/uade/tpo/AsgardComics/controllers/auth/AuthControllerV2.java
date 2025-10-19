@@ -1,10 +1,10 @@
 package com.uade.tpo.AsgardComics.controllers.auth;
 
-import com.uade.tpo.AsgardComics.controllers.dto.request.LoginRequest;
-import com.uade.tpo.AsgardComics.controllers.dto.request.RegisterRequest;
-import com.uade.tpo.AsgardComics.controllers.dto.response.ApiResponse;
-import com.uade.tpo.AsgardComics.controllers.dto.response.AuthResponse;
-import com.uade.tpo.AsgardComics.controllers.exceptions.BadRequestException;
+import com.uade.tpo.AsgardComics.dto.request.LoginRequest;
+import com.uade.tpo.AsgardComics.dto.request.RegisterRequest;
+import com.uade.tpo.AsgardComics.dto.response.ApiResponse;
+import com.uade.tpo.AsgardComics.dto.response.AuthResponse;
+import com.uade.tpo.AsgardComics.exceptions.BadRequestException;
 import com.uade.tpo.AsgardComics.models.User;
 import com.uade.tpo.AsgardComics.services.UserService;
 import org.springframework.http.ResponseEntity;
