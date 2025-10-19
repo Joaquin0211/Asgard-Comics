@@ -1,5 +1,5 @@
 // ...existing code...
-package com.uade.tpo.AsgardComics.controllers;
+package com.uade.tpo.AsgardComics.auth;
 
 import com.uade.tpo.AsgardComics.models.User;
 import com.uade.tpo.AsgardComics.services.UserService;

@@ -11,7 +11,4 @@ public interface ComicRepository extends JpaRepository<Comic, Long> {
     List<Comic> findByTitleContainingIgnoreCase(String title);
     List<Comic> findByAuthorContainingIgnoreCase(String author);
     Optional<Comic> findByTitle(String title);
-    Comic save(Comic comic);
-    Optional<Comic> findById(Long id);
-    void deleteById(Long id);
 }

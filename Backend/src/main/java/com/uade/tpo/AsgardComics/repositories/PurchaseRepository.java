@@ -8,11 +8,6 @@ import java.util.List;
 public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
     List<Purchase> findByUserId(Long userId);
     List<Purchase> findByComicId(Long comicId);
-    Purchase save(Purchase purchase);
-    void deleteById(Long id);
-    boolean existsById(Long id);
-    List<Purchase> findAll();
-    Purchase findById(long id);
     List<Purchase> findByUserIdAndComicId(Long userId, Long comicId);
     List<Purchase> findByUserIdOrderByPurchaseDateDesc(Long userId);
     
