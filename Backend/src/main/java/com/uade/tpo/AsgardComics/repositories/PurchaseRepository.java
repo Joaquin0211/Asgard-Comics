@@ -10,5 +10,4 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Long> {
     List<Purchase> findByComicId(Long comicId);
     List<Purchase> findByUserIdAndComicId(Long userId, Long comicId);
     List<Purchase> findByUserIdOrderByPurchaseDateDesc(Long userId);
-    
 }

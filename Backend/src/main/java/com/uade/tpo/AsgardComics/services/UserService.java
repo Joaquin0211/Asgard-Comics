@@ -3,11 +3,8 @@ package com.uade.tpo.AsgardComics.services;
 
 import com.uade.tpo.AsgardComics.models.User;
 import com.uade.tpo.AsgardComics.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 
 import java.util.List;
@@ -18,7 +15,6 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    @Autowired
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -57,5 +53,9 @@ public class UserService {
     public Optional<User> findByEmailAndPassword(String email, String password) {
         // Asume que UserRepository define findByEmailAndPassword
         return userRepository.findByEmailAndPassword(email, password);
+    }
+
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }
