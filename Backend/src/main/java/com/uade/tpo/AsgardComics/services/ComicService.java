@@ -3,7 +3,6 @@ package com.uade.tpo.AsgardComics.services;
 
 import com.uade.tpo.AsgardComics.models.Comic;
 import com.uade.tpo.AsgardComics.repositories.ComicRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +14,6 @@ public class ComicService {
 
     private final ComicRepository comicRepository;
 
-    @Autowired
     public ComicService(ComicRepository comicRepository) {
         this.comicRepository = comicRepository;
     }

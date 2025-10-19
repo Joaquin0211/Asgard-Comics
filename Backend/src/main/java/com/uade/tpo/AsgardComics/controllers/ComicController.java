@@ -2,7 +2,6 @@ package com.uade.tpo.AsgardComics.controllers;
 
 import com.uade.tpo.AsgardComics.models.Comic;
 import com.uade.tpo.AsgardComics.services.ComicService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +15,6 @@ public class ComicController {
 
     private final ComicService comicService;
 
-    @Autowired
     public ComicController(ComicService comicService) {
         this.comicService = comicService;
     }
