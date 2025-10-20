@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
-import { Search, User, ShoppingCart } from "react-feather";
+import { Link, useNavigate } from "react-router-dom";
+import { Search, User, ShoppingCart, LogOut } from "react-feather";
 import CartComponent from './CartComponent';
 import { getCartItemCount, searchComicsByTitle } from '../services/api';
 import "./Navbar.css";
@@ -27,9 +27,13 @@ const Navbar = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [showSearchResults, setShowSearchResults] = useState(false);
+    const [user, setUser] = useState(null);
+    const [showUserMenu, setShowUserMenu] = useState(false);
     
-    // Simular ID de usuario (en una app real vendría del contexto de autenticación)
-    const userId = 1;
+    const navigate = useNavigate();
+    
+    // ID de usuario (obtenerlo del contexto de autenticación)
+    const userId = user?.id || 1;
 
     useEffect(() => {
         const ENTER_COMPACT = 100; // entra en modo compacto al pasar este valor
@@ -53,6 +57,14 @@ const Navbar = () => {
         window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
         return () => window.removeEventListener('scroll', onScroll);
+    }, []);
+
+    // Verificar si hay usuario logueado al cargar
+    useEffect(() => {
+        const savedUser = localStorage.getItem('user');
+        if (savedUser) {
+            setUser(JSON.parse(savedUser));
+        }
     }, []);
 
     // Cargar contador del carrito
@@ -93,6 +105,22 @@ const Navbar = () => {
     const handleCartClose = () => {
         setIsCartOpen(false);
         loadCartCount(); // Recargar contador cuando se cierre el carrito
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        setUser(null);
+        setShowUserMenu(false);
+        navigate('/');
+    };
+
+    const handleUserMenuClick = () => {
+        if (user) {
+            setShowUserMenu(!showUserMenu);
+        } else {
+            navigate('/login');
+        }
     };
 
     return (
@@ -147,9 +175,50 @@ const Navbar = () => {
 
                         {/* Icons */}
                         <div className="ac-icons">
-                            <Link to="/profile" className="ac-icon" aria-label="Perfil">
-                                <User size={22} />
-                            </Link>
+                            <div className="user-menu-container">
+                                <button 
+                                    onClick={handleUserMenuClick}
+                                    className={`ac-icon ${user ? 'logged-in' : ''}`}
+                                    aria-label={user ? "Menú de usuario" : "Iniciar sesión"}
+                                >
+                                    <User size={22} />
+                                </button>
+                                
+                                {/* Menú desplegable del usuario */}
+                                {showUserMenu && user && (
+                                    <div className="user-dropdown">
+                                        <div className="user-info">
+                                            <span className="user-name">{user.name}</span>
+                                            <span className="user-role">{user.role}</span>
+                                        </div>
+                                        <hr />
+                                        <Link 
+                                            to={user.role === 'ADMIN' ? '/owner-dashboard' : '/user-dashboard'}
+                                            className="dropdown-item"
+                                            onClick={() => setShowUserMenu(false)}
+                                        >
+                                            Mi Dashboard
+                                        </Link>
+                                        <button 
+                                            onClick={handleLogout}
+                                            className="dropdown-item logout-btn"
+                                        >
+                                            <LogOut size={16} />
+                                            Cerrar Sesión
+                                        </button>
+                                    </div>
+                                )}
+                                
+                                {/* Mostrar "Iniciar Sesión" si no hay usuario */}
+                                {!user && (
+                                    <div className="login-prompt">
+                                        <Link to="/login" className="login-link">
+                                            Iniciar Sesión
+                                        </Link>
+                                    </div>
+                                )}
+                            </div>
+                            
                             <button 
                                 onClick={handleCartClick}
                                 className="ac-icon ac-icon--cart" 
