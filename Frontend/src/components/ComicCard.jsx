@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { addToCart } from '../services/api';
 import './ComicCard.css';
 
-const ComicCard = ({ comic, onPurchase, onAddToCart, userId = 1 }) => {
+const ComicCard = ({ comic, onPurchase, onAddToCart }) => {
     const [loading, setLoading] = useState(false);
     const [added, setAdded] = useState(false);
 
@@ -12,17 +12,46 @@ const ComicCard = ({ comic, onPurchase, onAddToCart, userId = 1 }) => {
 
     const handleAddToCart = async () => {
         if (loading || comic.stock === 0) return;
+
+        // Obtener usuario actual del localStorage
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        
+        if (!currentUser.id) {
+            alert('Por favor inicia sesión para agregar productos al carrito');
+            return;
+        }
         
         setLoading(true);
         try {
-            await addToCart(userId, comic.id, 1);
+            // Usar originalId si existe, sino usar id normal
+            const productId = comic.originalId || comic.id;
+            await addToCart(currentUser.id, productId, 1);
+            
+            // Guardar información del producto transformado en localStorage para el carrito
+            const transformedProducts = JSON.parse(localStorage.getItem('transformedProducts') || '{}');
+            transformedProducts[productId] = {
+                title: comic.title,
+                author: comic.author,
+                price: comic.price,
+                category: comic.category || 'comic',
+                description: comic.description
+            };
+            localStorage.setItem('transformedProducts', JSON.stringify(transformedProducts));
+            
             setAdded(true);
             onAddToCart?.(); // Callback para actualizar contador del carrito
+            
+            // Disparar evento personalizado para actualizar el contador del carrito
+            window.dispatchEvent(new CustomEvent('cartUpdated'));
             
             // Resetear estado después de 2 segundos
             setTimeout(() => setAdded(false), 2000);
         } catch (error) {
             console.error('Error agregando al carrito:', error);
+            
+            // Mensaje de error más específico
+            const errorMessage = error.response?.data?.message || error.message || 'Error agregando producto al carrito';
+            alert(errorMessage);
         } finally {
             setLoading(false);
         }

@@ -1,68 +1,180 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { getComics, deleteComic } from '../services/api';
+import EditComicModal from './EditComicModal';
+import ComicUploadForm from './ComicUploadForm';
+import DataInitializer from './DataInitializer';
+import './StockManager.css';
 
 const StockManager = () => {
     const [comics, setComics] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [newStock, setNewStock] = useState({ id: '', stock: '' });
+    const [selectedComic, setSelectedComic] = useState(null);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [showAddForm, setShowAddForm] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
-        const fetchComics = async () => {
-            try {
-                const response = await axios.get('/api/comics');
-                setComics(response.data);
-            } catch (err) {
-                setError('Failed to fetch comics');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchComics();
+        loadComics();
     }, []);
 
-    const handleStockUpdate = async (e) => {
-        e.preventDefault();
+    const loadComics = async () => {
+        setLoading(true);
         try {
-            await axios.put(`/api/comics/${newStock.id}`, { stock: newStock.stock });
-            setComics(comics.map(comic => comic.id === newStock.id ? { ...comic, stock: newStock.stock } : comic));
-            setNewStock({ id: '', stock: '' });
+            const data = await getComics();
+            setComics(data);
+            setError(null);
         } catch (err) {
-            setError('Failed to update stock');
+            console.error('Error loading comics:', err);
+            setError('Error cargando productos');
+        } finally {
+            setLoading(false);
         }
     };
 
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>{error}</div>;
+    const handleEdit = (comic) => {
+        setSelectedComic(comic);
+        setShowEditModal(true);
+    };
+
+    const handleDelete = async (comic) => {
+        if (window.confirm(`¿Estás seguro de eliminar "${comic.title}"?`)) {
+            try {
+                await deleteComic(comic.id);
+                await loadComics(); // Recargar lista
+                alert('Producto eliminado exitosamente');
+            } catch (error) {
+                console.error('Error eliminando producto:', error);
+                alert('Error eliminando producto');
+            }
+        }
+    };
+
+    const filteredComics = comics.filter(comic =>
+        comic.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        comic.author?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const getStockStatus = (stock) => {
+        if (stock === 0) return 'out-of-stock';
+        if (stock <= 5) return 'low-stock';
+        return 'in-stock';
+    };
+
+    const getStockText = (stock) => {
+        if (stock === 0) return 'Agotado';
+        if (stock <= 5) return 'Stock bajo';
+        return 'En stock';
+    };
+
+    if (loading) return <div className="loading">Cargando productos...</div>;
 
     return (
-        <div>
-            <h2>Manage Comic Stock</h2>
-            <ul>
-                {comics.map(comic => (
-                    <li key={comic.id}>
-                        {comic.title} - Stock: {comic.stock}
-                    </li>
-                ))}
-            </ul>
-            <form onSubmit={handleStockUpdate}>
-                <input
-                    type="text"
-                    placeholder="Comic ID"
-                    value={newStock.id}
-                    onChange={(e) => setNewStock({ ...newStock, id: e.target.value })}
-                    required
-                />
-                <input
-                    type="number"
-                    placeholder="New Stock"
-                    value={newStock.stock}
-                    onChange={(e) => setNewStock({ ...newStock, stock: e.target.value })}
-                    required
-                />
-                <button type="submit">Update Stock</button>
-            </form>
+        <div className="stock-manager">
+            <div className="stock-header">
+                <h2>Gestión de Inventario</h2>
+                <button 
+                    onClick={() => setShowAddForm(!showAddForm)} 
+                    className="add-product-btn"
+                >
+                    {showAddForm ? 'Ver Inventario' : 'Agregar Producto'}
+                </button>
+            </div>
+
+            {showAddForm ? (
+                <div className="admin-forms">
+                    <ComicUploadForm onProductAdded={() => {
+                        loadComics();
+                        setShowAddForm(false);
+                    }} />
+                    
+                    {comics.length === 0 && (
+                        <DataInitializer onDataLoaded={() => {
+                            loadComics();
+                        }} />
+                    )}
+                </div>
+            ) : (
+                <>
+                    <div className="search-section">
+                        <input
+                            type="text"
+                            placeholder="Buscar productos..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="search-input"
+                        />
+                        <div className="stats">
+                            <span>Total: {comics.length} productos</span>
+                            <span>Agotados: {comics.filter(c => c.stock === 0).length}</span>
+                            <span>Stock bajo: {comics.filter(c => c.stock > 0 && c.stock <= 5).length}</span>
+                        </div>
+                    </div>
+
+                    {error && <div className="error-message">{error}</div>}
+
+                    <div className="products-grid">
+                        {filteredComics.length === 0 ? (
+                            <div className="no-products">
+                                {searchTerm ? 'No se encontraron productos' : 'No hay productos disponibles'}
+                            </div>
+                        ) : (
+                            filteredComics.map(comic => (
+                                <div key={comic.id} className="product-card">
+                                    <img 
+                                        src={comic.imageUrl || 'https://via.placeholder.com/150x200'} 
+                                        alt={comic.title}
+                                        className="product-image"
+                                    />
+                                    <div className="product-info">
+                                        <h3 className="product-title">{comic.title}</h3>
+                                        <p className="product-author">por {comic.author}</p>
+                                        <p className="product-price">${comic.price}</p>
+                                        <div className={`stock-badge ${getStockStatus(comic.stock)}`}>
+                                            {getStockText(comic.stock)} ({comic.stock})
+                                        </div>
+                                        {comic.description && (
+                                            <p className="product-description">
+                                                {comic.description.length > 100 
+                                                    ? comic.description.substring(0, 100) + '...'
+                                                    : comic.description
+                                                }
+                                            </p>
+                                        )}
+                                    </div>
+                                    <div className="product-actions">
+                                        <button 
+                                            onClick={() => handleEdit(comic)}
+                                            className="edit-btn"
+                                        >
+                                            ✏️ Editar
+                                        </button>
+                                        <button 
+                                            onClick={() => handleDelete(comic)}
+                                            className="delete-btn"
+                                        >
+                                            🗑️ Eliminar
+                                        </button>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </>
+            )}
+
+            {/* Modal de Edición */}
+            <EditComicModal
+                comic={selectedComic}
+                isVisible={showEditModal}
+                onClose={() => {
+                    setShowEditModal(false);
+                    setSelectedComic(null);
+                }}
+                onUpdate={() => {
+                    loadComics();
+                }}
+            />
         </div>
     );
 };

@@ -114,6 +114,18 @@
   font-size: 16px;
 }
 
+.category-badge {
+  display: inline-block;
+  background: #007bff;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  margin-top: 5px;
+}
+
 .quantity-controls {
   display: flex;
   align-items: center;

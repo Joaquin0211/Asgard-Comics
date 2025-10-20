@@ -1,11 +1,38 @@
 import { useState, useEffect } from 'react';
 import { getCart, updateCartQuantity, removeFromCart, clearCart } from '../services/api';
+import CheckoutComponent from './CheckoutComponent';
 import './CartComponent.css';
 
 function CartComponent({ userId, isOpen, onClose }) {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [total, setTotal] = useState(0);
+  const [showCheckout, setShowCheckout] = useState(false);
+  
+  // Función para obtener información del producto (transformado o original)
+  const getProductInfo = (item) => {
+    const transformedProducts = JSON.parse(localStorage.getItem('transformedProducts') || '{}');
+    const transformed = transformedProducts[item.comic.id];
+    
+    if (transformed) {
+      return {
+        title: transformed.title,
+        author: transformed.author,
+        price: transformed.price,
+        category: transformed.category,
+        description: transformed.description
+      };
+    }
+    
+    // Si no hay transformación, usar datos originales
+    return {
+      title: item.comic.title,
+      author: item.comic.author,
+      price: item.comic.price,
+      category: 'comic',
+      description: item.comic.description
+    };
+  };
 
   useEffect(() => {
     if (isOpen && userId) {
@@ -30,7 +57,8 @@ function CartComponent({ userId, isOpen, onClose }) {
 
   const calculateTotal = (items) => {
     const totalAmount = items.reduce((sum, item) => {
-      return sum + (item.comic.price * item.quantity);
+      const productInfo = getProductInfo(item);
+      return sum + (productInfo.price * item.quantity);
     }, 0);
     setTotal(totalAmount);
   };
@@ -88,44 +116,50 @@ function CartComponent({ userId, isOpen, onClose }) {
           ) : (
             <>
               <div className="cart-items">
-                {cartItems.map((item) => (
-                  <div key={item.id} className="cart-item">
-                    <img 
-                      src={item.comic.imageUrl || '/placeholder-comic.jpg'} 
-                      alt={item.comic.title}
-                      className="item-image"
-                    />
-                    <div className="item-details">
-                      <h4>{item.comic.title}</h4>
-                      <p>por {item.comic.author}</p>
-                      <p className="price">${item.comic.price}</p>
-                    </div>
-                    <div className="quantity-controls">
+                {cartItems.map((item) => {
+                  const productInfo = getProductInfo(item);
+                  return (
+                    <div key={item.id} className="cart-item">
+                      <img 
+                        src={item.comic.imageUrl || '/placeholder-comic.jpg'} 
+                        alt={productInfo.title}
+                        className="item-image"
+                      />
+                      <div className="item-details">
+                        <h4>{productInfo.title}</h4>
+                        <p>por {productInfo.author}</p>
+                        <p className="price">${productInfo.price}</p>
+                        {productInfo.category !== 'comic' && (
+                          <p className="category-badge">{productInfo.category.charAt(0).toUpperCase() + productInfo.category.slice(1)}</p>
+                        )}
+                      </div>
+                      <div className="quantity-controls">
+                        <button 
+                          onClick={() => handleQuantityChange(item.comic.id, item.quantity - 1)}
+                          className="qty-btn"
+                        >
+                          -
+                        </button>
+                        <span className="quantity">{item.quantity}</span>
+                        <button 
+                          onClick={() => handleQuantityChange(item.comic.id, item.quantity + 1)}
+                          className="qty-btn"
+                        >
+                          +
+                        </button>
+                      </div>
+                      <div className="item-total">
+                        ${(productInfo.price * item.quantity).toFixed(2)}
+                      </div>
                       <button 
-                        onClick={() => handleQuantityChange(item.comic.id, item.quantity - 1)}
-                        className="qty-btn"
+                        onClick={() => handleRemoveItem(item.comic.id)}
+                        className="remove-btn"
                       >
-                        -
-                      </button>
-                      <span className="quantity">{item.quantity}</span>
-                      <button 
-                        onClick={() => handleQuantityChange(item.comic.id, item.quantity + 1)}
-                        className="qty-btn"
-                      >
-                        +
+                        🗑️
                       </button>
                     </div>
-                    <div className="item-total">
-                      ${(item.comic.price * item.quantity).toFixed(2)}
-                    </div>
-                    <button 
-                      onClick={() => handleRemoveItem(item.comic.id)}
-                      className="remove-btn"
-                    >
-                      🗑️
-                    </button>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
               
               <div className="cart-footer">
@@ -136,7 +170,11 @@ function CartComponent({ userId, isOpen, onClose }) {
                   <button onClick={handleClearCart} className="clear-btn">
                     Vaciar Carrito
                   </button>
-                  <button className="checkout-btn">
+                  <button 
+                    onClick={() => setShowCheckout(true)} 
+                    className="checkout-btn"
+                    disabled={cartItems.length === 0}
+                  >
                     Proceder al Pago
                   </button>
                 </div>
@@ -145,6 +183,23 @@ function CartComponent({ userId, isOpen, onClose }) {
           )}
         </div>
       </div>
+      
+      {/* Componente de Checkout */}
+      {showCheckout && (
+        <CheckoutComponent
+          userId={userId}
+          cartItems={cartItems}
+          total={total}
+          onClose={() => setShowCheckout(false)}
+          onPaymentSuccess={(result) => {
+            console.log('Pago exitoso:', result);
+            // Recargar carrito (estará vacío después del pago)
+            loadCart();
+            // Disparar evento para actualizar contador del carrito
+            window.dispatchEvent(new CustomEvent('cartUpdated'));
+          }}
+        />
+      )}
     </div>
   );
 }

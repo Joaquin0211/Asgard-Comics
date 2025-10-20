@@ -118,6 +118,22 @@ export const getCartItemCount = async (userId) => {
   return data;
 };
 
+// ============ PAYMENT API ============
+export const processPayment = async (paymentData) => {
+  const { data } = await axios.post(`${API_BASE}/payment/process`, paymentData);
+  return data;
+};
+
+export const getOrderHistory = async (userId) => {
+  const { data } = await axios.get(`${API_BASE}/payment/orders/${userId}`);
+  return data;
+};
+
+export const getOrderById = async (orderId) => {
+  const { data } = await axios.get(`${API_BASE}/payment/order/${orderId}`);
+  return data;
+};
+
 // ============ USER API ============
 export const loginUser = async (email, password) => {
   const { data } = await axios.post(`${API_BASE}/auth/login`, {
