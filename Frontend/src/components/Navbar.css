@@ -14,6 +14,8 @@
   z-index: 50;
   box-shadow: 0 4px 14px rgba(0,0,0,.25);
   margin: 0 !important; /* evita espacios en blanco que vienen de estilos globales (nav { margin }) */
+  height: auto;
+  min-height: 160px; /* Altura mínima fija para evitar superposiciones */
 }
 .ac-navbar a{ background: transparent !important; }
 .ac-navbar a:hover{ background: transparent !important; }

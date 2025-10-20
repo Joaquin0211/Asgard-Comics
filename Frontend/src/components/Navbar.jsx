@@ -19,6 +19,9 @@ const Navbar = () => {
         { name: "Extras y Más", path: "/extras" },
         { name: "Utilidades", path: "/utilities" },
         { name: "FAQ / News", path: "/news" },
+        { name: "🔍 Filtrar Precios", path: "/price-filter" },
+        { name: "🧪 Test API", path: "/test-endpoints" },
+        { name: "🛒 Debug Carrito", path: "/cart-debug" },
     ];
 
     const [isCompact, setIsCompact] = useState(false);
@@ -33,7 +36,7 @@ const Navbar = () => {
     const navigate = useNavigate();
     
     // ID de usuario (obtenerlo del contexto de autenticación)
-    const userId = user?.id || 1;
+    const userId = user?.id;
 
     useEffect(() => {
         const ENTER_COMPACT = 100; // entra en modo compacto al pasar este valor
@@ -61,23 +64,50 @@ const Navbar = () => {
 
     // Verificar si hay usuario logueado al cargar
     useEffect(() => {
-        const savedUser = localStorage.getItem('user');
-        if (savedUser) {
-            setUser(JSON.parse(savedUser));
-        }
+        const checkUser = () => {
+            const savedUser = localStorage.getItem('user');
+            if (savedUser) {
+                setUser(JSON.parse(savedUser));
+            } else {
+                setUser(null);
+            }
+        };
+
+        // Verificar al cargar
+        checkUser();
+
+        // Escuchar eventos de login/logout
+        const handleUserChange = () => {
+            checkUser();
+        };
+
+        window.addEventListener('userLoggedIn', handleUserChange);
+        window.addEventListener('userLoggedOut', handleUserChange);
+
+        return () => {
+            window.removeEventListener('userLoggedIn', handleUserChange);
+            window.removeEventListener('userLoggedOut', handleUserChange);
+        };
     }, []);
 
     // Cargar contador del carrito
     useEffect(() => {
-        loadCartCount();
+        if (userId) {
+            loadCartCount();
+        } else {
+            setCartItemCount(0);
+        }
     }, [userId]);
 
     const loadCartCount = async () => {
+        if (!userId) return;
+        
         try {
             const count = await getCartItemCount(userId);
             setCartItemCount(count);
         } catch (error) {
             console.error('Error cargando contador del carrito:', error);
+            setCartItemCount(0);
         }
     };
 
@@ -99,6 +129,10 @@ const Navbar = () => {
     };
 
     const handleCartClick = () => {
+        if (!user) {
+            navigate('/login');
+            return;
+        }
         setIsCartOpen(true);
     };
 
@@ -112,6 +146,10 @@ const Navbar = () => {
         localStorage.removeItem('token');
         setUser(null);
         setShowUserMenu(false);
+        
+        // Disparar evento de logout
+        window.dispatchEvent(new Event('userLoggedOut'));
+        
         navigate('/');
     };
 

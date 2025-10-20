@@ -1,13 +1,29 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
+    padding: 0;
     font-family: Arial, sans-serif;
     background-color: #F2EDE3; /* nordic beige */
     color: #2b2b2b;
+    overflow-x: hidden;
+}
+
+html {
+    margin: 0;
+    padding: 0;
 }
 
 h1, h2, h3 {
-
     color: #2b2b2b;
+}
+
+/* Clase utilitaria para contenido principal */
+.main-content {
+    padding-top: 160px; /* Espacio para navbar sticky */
+    min-height: 100vh;
 }
 
 .container {
@@ -16,6 +32,7 @@ h1, h2, h3 {
     overflow: hidden;
 }
 
+/* Comentado para evitar conflictos con navbar personalizado
 header {
     background: #35424a;
     color: #ffffff;
@@ -36,6 +53,7 @@ nav a {
 nav a:hover {
     background: #2c3e50;
 }
+*/
 
 .card {
     background: #ffffff;

@@ -25,7 +25,13 @@ public class TestDataController {
     @PostMapping("/create-sample-data")
     public ResponseEntity<String> createSampleData() {
         try {
-            // Crear usuarios de prueba
+            // Verificar si ya existen datos
+            if (usuarioService.findAll().size() > 0) {
+                return ResponseEntity.ok("Los datos de prueba ya existen. Total usuarios: " + 
+                    usuarioService.findAll().size() + ", Total cómics: " + comicService.findAll().size());
+            }
+
+            // Crear usuarios de prueba solo si no existen
             User admin = new User();
             admin.setName("Admin");
             admin.setEmail("admin@asgard.com");
@@ -75,7 +81,54 @@ public class TestDataController {
             comic3.setImageUrl("https://via.placeholder.com/300x400");
             comicService.save(comic3);
 
-            return ResponseEntity.ok("Datos de prueba creados exitosamente!");
+            Comic comic4 = new Comic();
+            comic4.setTitle("The Avengers #1");
+            comic4.setAuthor("Stan Lee");
+            comic4.setDescription("Los Vengadores se unen por primera vez");
+            comic4.setPrice(35.50);
+            comic4.setStock(12);
+            comic4.setImageUrl("https://via.placeholder.com/300x400");
+            comicService.save(comic4);
+
+            Comic comic5 = new Comic();
+            comic5.setTitle("Wonder Woman #1");
+            comic5.setAuthor("William Moulton Marston");
+            comic5.setDescription("La primera aparición de Wonder Woman");
+            comic5.setPrice(18.75);
+            comic5.setStock(6);
+            comic5.setImageUrl("https://via.placeholder.com/300x400");
+            comicService.save(comic5);
+
+            Comic comic6 = new Comic();
+            comic6.setTitle("Iron Man #1");
+            comic6.setAuthor("Stan Lee");
+            comic6.setDescription("El nacimiento del Hombre de Hierro");
+            comic6.setPrice(42.99);
+            comic6.setStock(4);
+            comic6.setImageUrl("https://via.placeholder.com/300x400");
+            comicService.save(comic6);
+
+            Comic comic7 = new Comic();
+            comic7.setTitle("Dragon Ball #1");
+            comic7.setAuthor("Akira Toriyama");
+            comic7.setDescription("El inicio de la saga de Goku");
+            comic7.setPrice(15.99);
+            comic7.setStock(20);
+            comic7.setImageUrl("https://via.placeholder.com/300x400");
+            comicService.save(comic7);
+
+            Comic comic8 = new Comic();
+            comic8.setTitle("One Piece #1");
+            comic8.setAuthor("Eiichiro Oda");
+            comic8.setDescription("La aventura de Luffy comienza");
+            comic8.setPrice(12.50);
+            comic8.setStock(25);
+            comic8.setImageUrl("https://via.placeholder.com/300x400");
+            comicService.save(comic8);
+
+            return ResponseEntity.ok("Datos de prueba creados exitosamente! " +
+                "Usuarios: " + usuarioService.findAll().size() + 
+                ", Cómics: " + comicService.findAll().size());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error creando datos: " + e.getMessage());
         }
@@ -91,5 +144,29 @@ public class TestDataController {
     public ResponseEntity<List<Comic>> getAllComics() {
         List<Comic> comics = comicService.findAll();
         return ResponseEntity.ok(comics);
+    }
+
+    @DeleteMapping("/clear-all-data")
+    public ResponseEntity<String> clearAllData() {
+        try {
+            return ResponseEntity.ok("Función de limpieza deshabilitada por seguridad. Reinicia la aplicación para limpiar la base de datos H2.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity<String> getDataStatus() {
+        try {
+            long userCount = usuarioService.findAll().size();
+            long comicCount = comicService.findAll().size();
+            
+            return ResponseEntity.ok(String.format(
+                "Estado de la base de datos: %d usuarios, %d cómics", 
+                userCount, comicCount
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error obteniendo estado: " + e.getMessage());
+        }
     }
 }

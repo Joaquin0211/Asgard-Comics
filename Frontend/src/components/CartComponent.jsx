@@ -17,10 +17,12 @@ function CartComponent({ userId, isOpen, onClose }) {
     setLoading(true);
     try {
       const items = await getCart(userId);
-      setCartItems(items);
-      calculateTotal(items);
+      console.log('Cart items loaded:', items); // Debug
+      setCartItems(items || []);
+      calculateTotal(items || []);
     } catch (error) {
       console.error('Error cargando carrito:', error);
+      setCartItems([]);
     } finally {
       setLoading(false);
     }
@@ -65,6 +67,8 @@ function CartComponent({ userId, isOpen, onClose }) {
   };
 
   if (!isOpen) return null;
+
+  console.log('CartComponent - userId:', userId, 'isOpen:', isOpen); // Debug
 
   return (
     <div className="cart-overlay">

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test - Asgard Comics</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        .title {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .status {
+            font-size: 1.2em;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+        }
+        .success {
+            background: rgba(40,167,69,0.3);
+            border: 2px solid #28a745;
+        }
+        .button {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        .button:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">🎯 Asgard Comics</div>
+        <div class="status success">
+            ✅ Frontend funcionando correctamente
+        </div>
+        <div class="status">
+            📡 Servidor: http://localhost:5174
+        </div>
+        <div class="status">
+            🌐 Backend: http://localhost:8080
+        </div>
+        
+        <button class="button" onclick="testBackend()">
+            🔧 Probar Backend
+        </button>
+        
+        <button class="button" onclick="testReact()">
+            ⚛️ Cargar React
+        </button>
+        
+        <div id="result" style="margin-top: 20px;"></div>
+    </div>
+
+    <script>
+        console.log('🚀 Test page loaded successfully');
+        
+        async function testBackend() {
+            const result = document.getElementById('result');
+            result.innerHTML = '⏳ Probando backend...';
+            
+            try {
+                const response = await fetch('http://localhost:8080/api/test/status');
+                const data = await response.text();
+                result.innerHTML = `<div class="status success">✅ Backend: ${data}</div>`;
+            } catch (error) {
+                result.innerHTML = `<div class="status" style="background: rgba(220,53,69,0.3); border: 2px solid #dc3545;">❌ Backend: ${error.message}</div>`;
+            }
+        }
+        
+        function testReact() {
+            window.location.href = '/';
+        }
+        
+        // Test automático al cargar
+        setTimeout(() => {
+            console.log('✅ JavaScript working');
+        }, 1000);
+    </script>
+</body>
+</html>

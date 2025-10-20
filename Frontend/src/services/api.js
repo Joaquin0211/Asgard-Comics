@@ -56,6 +56,33 @@ export const getNewComics = async (limit = 8) => {
   return data;
 };
 
+export const createComic = async (comicData) => {
+  const { data } = await axios.post(`${API_BASE}/comics`, comicData);
+  return data;
+};
+
+export const updateComic = async (id, comicData) => {
+  const { data } = await axios.put(`${API_BASE}/comics/${id}`, comicData);
+  return data;
+};
+
+export const deleteComic = async (id) => {
+  await axios.delete(`${API_BASE}/comics/${id}`);
+};
+
+// ✨ NUEVOS ENDPOINTS
+export const getComicsByPriceRange = async (minPrice, maxPrice) => {
+  const { data } = await axios.get(`${API_BASE}/comics/price-range`, {
+    params: { minPrice, maxPrice }
+  });
+  return data;
+};
+
+export const getInventoryStats = async () => {
+  const { data } = await axios.get(`${API_BASE}/comics/stats`);
+  return data;
+};
+
 // ============ CART API ============
 export const getCart = async (userId) => {
   const { data } = await axios.get(`${API_BASE}/cart/user/${userId}`);

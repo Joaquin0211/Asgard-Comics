@@ -96,5 +96,59 @@ public class ComicController {
         Optional<Comic> updated = comicService.adjustStock(id, delta);
         return updated.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    // ✨ NUEVO ENDPOINT: Buscar cómics por rango de precio
+    @GetMapping("/price-range")
+    public ResponseEntity<List<Comic>> getComicsByPriceRange(
+            @RequestParam Double minPrice, 
+            @RequestParam Double maxPrice) {
+        try {
+            List<Comic> comics = comicService.findAll().stream()
+                .filter(comic -> comic.getPrice() >= minPrice && comic.getPrice() <= maxPrice)
+                .toList();
+            return ResponseEntity.ok(comics);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    // ✨ NUEVO ENDPOINT: Obtener estadísticas de inventario
+    @GetMapping("/stats")
+    public ResponseEntity<InventoryStats> getInventoryStats() {
+        try {
+            List<Comic> allComics = comicService.findAll();
+            
+            InventoryStats stats = new InventoryStats();
+            stats.setTotalComics(allComics.size());
+            stats.setTotalStock(allComics.stream().mapToInt(Comic::getStock).sum());
+            stats.setAveragePrice(allComics.stream().mapToDouble(Comic::getPrice).average().orElse(0.0));
+            stats.setTotalValue(allComics.stream().mapToDouble(c -> c.getPrice() * c.getStock()).sum());
+            
+            return ResponseEntity.ok(stats);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    // DTO para las estadísticas
+    public static class InventoryStats {
+        private int totalComics;
+        private int totalStock;
+        private double averagePrice;
+        private double totalValue;
+
+        // Getters y Setters
+        public int getTotalComics() { return totalComics; }
+        public void setTotalComics(int totalComics) { this.totalComics = totalComics; }
+        
+        public int getTotalStock() { return totalStock; }
+        public void setTotalStock(int totalStock) { this.totalStock = totalStock; }
+        
+        public double getAveragePrice() { return averagePrice; }
+        public void setAveragePrice(double averagePrice) { this.averagePrice = averagePrice; }
+        
+        public double getTotalValue() { return totalValue; }
+        public void setTotalValue(double totalValue) { this.totalValue = totalValue; }
+    }
 }
 

@@ -31,8 +31,12 @@ const Login = () => {
             // Guardar datos del usuario en localStorage
             localStorage.setItem('token', data.token);
             localStorage.setItem('user', JSON.stringify(data.user));
+            localStorage.setItem('currentUser', JSON.stringify(data.user)); // Para el carrito
             
             console.log('Login exitoso:', data);
+            
+            // Disparar evento personalizado para notificar al Navbar
+            window.dispatchEvent(new Event('userLoggedIn'));
             
             // Redirigir según el rol del usuario
             if (data.user.role === 'ADMIN') {

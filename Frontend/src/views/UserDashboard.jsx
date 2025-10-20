@@ -1,6 +1,7 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { addToCart } from '../services/api';
 
 const UserDashboard = () => {
     const [user, setUser] = useState(null);
@@ -44,6 +45,16 @@ const UserDashboard = () => {
         navigate('/');
     };
 
+    const handleAddToCart = async (comicId) => {
+        try {
+            await addToCart(user.id, comicId, 1);
+            alert('¡Producto agregado al carrito!');
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+            alert('Error al agregar al carrito');
+        }
+    };
+
     if (loading) {
         return (
             <div style={styles.container}>
@@ -81,7 +92,10 @@ const UserDashboard = () => {
                                         <p style={styles.comicAuthor}>Por: {comic.author}</p>
                                         <p style={styles.comicPrice}>${comic.price}</p>
                                         <p style={styles.comicStock}>Stock: {comic.stock}</p>
-                                        <button style={styles.addToCartBtn}>
+                                        <button 
+                                            style={styles.addToCartBtn}
+                                            onClick={() => handleAddToCart(comic.id)}
+                                        >
                                             🛒 Agregar al Carrito
                                         </button>
                                     </div>
