@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { addToCart } from '../services/api';
+import { getProductImage, defaultImages } from '../utils/imageUtils';
 import './ComicCard.css';
 
 const ComicCard = ({ comic, onPurchase, onAddToCart }) => {
     const [loading, setLoading] = useState(false);
     const [added, setAdded] = useState(false);
+    const [imageError, setImageError] = useState(false);
 
     const handlePurchase = () => {
         onPurchase?.(comic.id);
@@ -60,11 +62,20 @@ const ComicCard = ({ comic, onPurchase, onAddToCart }) => {
     return (
         <div className="comic-card">
             <div className="comic-thumb">
-                {comic.imageUrl ? (
-                    <img src={comic.imageUrl} alt={comic.title} />
+                {!imageError && comic.imageUrl ? (
+                    <img 
+                        src={getProductImage(comic.title, comic.category, comic.imageUrl)} 
+                        alt={comic.title}
+                        onError={() => setImageError(true)}
+                        loading="lazy"
+                    />
                 ) : (
                     <div className="placeholder" aria-hidden>
-                        <span>Sin imagen</span>
+                        <img 
+                            src={getProductImage(comic.title, comic.category)} 
+                            alt={comic.title}
+                            loading="lazy"
+                        />
                     </div>
                 )}
             </div>

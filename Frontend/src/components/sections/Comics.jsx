@@ -10,11 +10,28 @@ const Comics = () => {
 
     useEffect(() => {
         loadComics();
+
+        // Escuchar eventos de login/logout para recargar cómics
+        const handleUserChange = () => {
+            loadComics();
+        };
+
+        window.addEventListener('userLoggedIn', handleUserChange);
+        window.addEventListener('userLoggedOut', handleUserChange);
+
+        return () => {
+            window.removeEventListener('userLoggedIn', handleUserChange);
+            window.removeEventListener('userLoggedOut', handleUserChange);
+        };
     }, []);
 
     const loadComics = async () => {
         try {
-            const comicsData = await getComics();
+            const allData = await getComics();
+            // Filtrar solo productos de categoría 'comic'
+            const comicsData = allData.filter(item => 
+                item.category === 'comic' || !item.category // productos sin categoría se consideran cómics por defecto
+            );
             setComics(comicsData);
         } catch (error) {
             console.error('Error cargando cómics:', error);

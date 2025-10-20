@@ -14,16 +14,10 @@ const Figures = () => {
     const loadItems = async () => {
         try {
             const allComics = await getComics();
-            // Simular figuras usando algunos cómics como base
-            const figureItems = allComics.slice(0, 4).map((comic, index) => ({
-                ...comic,
-                id: `figure-${comic.id}`,
-                originalId: comic.id,
-                title: `Figura ${comic.title.split(' ')[0]}`,
-                description: `Figura coleccionable de ${comic.title}`,
-                price: comic.price * 2.5, // Las figuras son más caras
-                type: 'figure'
-            }));
+            // Filtrar solo productos de categoría 'figura'
+            const figureItems = allComics.filter(comic => 
+                comic.category === 'figura' || comic.type === 'figure'
+            );
             setItems(figureItems);
         } catch (error) {
             console.error('Error cargando figuras:', error);

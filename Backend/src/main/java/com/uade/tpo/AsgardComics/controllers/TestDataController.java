@@ -25,33 +25,37 @@ public class TestDataController {
     @PostMapping("/create-sample-data")
     public ResponseEntity<String> createSampleData() {
         try {
-            // Verificar si ya existen datos
-            if (usuarioService.findAll().size() > 0) {
-                return ResponseEntity.ok("Los datos de prueba ya existen. Total usuarios: " + 
-                    usuarioService.findAll().size() + ", Total cómics: " + comicService.findAll().size());
-            }
-
             // Crear usuarios de prueba solo si no existen
             User admin = new User();
             admin.setName("Admin");
             admin.setEmail("admin@asgard.com");
             admin.setPassword("admin123"); // En producción debería estar hasheada
-            admin.setRole("ADMIN");
-            usuarioService.save(admin);
+            admin.setRole("ADMIN"); // ADMIN en lugar de USER
+            
+            // Verificar si ya existe
+            if (usuarioService.findByEmail("admin@asgard.com").isEmpty()) {
+                usuarioService.save(admin);
+            }
 
             User user1 = new User();
             user1.setName("Juan Pérez");
             user1.setEmail("juan@email.com");
             user1.setPassword("user123");
             user1.setRole("USER");
-            usuarioService.save(user1);
+            
+            if (usuarioService.findByEmail("juan@email.com").isEmpty()) {
+                usuarioService.save(user1);
+            }
 
             User user2 = new User();
             user2.setName("María García");
             user2.setEmail("maria@email.com");
             user2.setPassword("user123");
             user2.setRole("USER");
-            usuarioService.save(user2);
+            
+            if (usuarioService.findByEmail("maria@email.com").isEmpty()) {
+                usuarioService.save(user2);
+            }
 
             // Crear comics de prueba
             Comic comic1 = new Comic();
@@ -167,6 +171,28 @@ public class TestDataController {
             ));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error obteniendo estado: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/fix-admin-role")
+    public ResponseEntity<String> fixAdminRole() {
+        try {
+            // Buscar usuario admin por email
+            var adminUsers = usuarioService.findAll().stream()
+                .filter(user -> "admin@asgard.com".equals(user.getEmail()))
+                .toList();
+            
+            if (adminUsers.isEmpty()) {
+                return ResponseEntity.badRequest().body("Usuario admin no encontrado");
+            }
+            
+            User admin = adminUsers.get(0);
+            admin.setRole("ADMIN");
+            usuarioService.save(admin);
+            
+            return ResponseEntity.ok("Rol de admin corregido exitosamente");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error corrigiendo rol: " + e.getMessage());
         }
     }
 }

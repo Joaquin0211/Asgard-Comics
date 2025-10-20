@@ -7,7 +7,7 @@ export default function ComicsMas(){
       title="Comics y Más" 
       subtitle="Superhéroes, independientes y colecciones de cómics"
       showProducts={true}
-      filterType="superhero"
+      filterType="comic"
     />
   );
 }

@@ -28,6 +28,8 @@ public class Comic {
     @Column(length = 2000)
     private String description;
 
+    private String category;
+
     @OneToMany(mappedBy = "comic", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("comic")
     private List<Purchase> purchases = new ArrayList<>();
@@ -41,6 +43,16 @@ public class Comic {
         this.stock = stock;
         this.imageUrl = imageUrl;
         this.description = description;
+    }
+
+    public Comic(String title, String author, Double price, Integer stock, String imageUrl, String description, String category) {
+        this.title = title;
+        this.author = author;
+        this.price = price;
+        this.stock = stock;
+        this.imageUrl = imageUrl;
+        this.description = description;
+        this.category = category;
     }
 
     // getters y setters
@@ -64,6 +76,9 @@ public class Comic {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
 
     public List<Purchase> getPurchases() { return purchases; }
     public void setPurchases(List<Purchase> purchases) { this.purchases = purchases; }

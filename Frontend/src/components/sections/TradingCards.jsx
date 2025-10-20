@@ -14,20 +14,10 @@ const TradingCards = () => {
     const loadItems = async () => {
         try {
             const allComics = await getComics();
-            // Simular TCG usando algunos cómics como base
-            const tcgItems = allComics.slice(2, 6).map((comic, index) => {
-                const tcgTypes = ['Pokémon', 'Yu-Gi-Oh!', 'Magic', 'Dragon Ball Super'];
-                return {
-                    ...comic,
-                    id: `tcg-${comic.id}`,
-                    originalId: comic.id,
-                    title: `Pack ${tcgTypes[index] || 'TCG'} ${comic.title.split(' ')[0]}`,
-                    description: `Cartas coleccionables de ${tcgTypes[index] || 'TCG'}`,
-                    price: comic.price * 0.8, // Los packs son más baratos
-                    tcgType: tcgTypes[index] || 'TCG',
-                    type: 'tcg'
-                };
-            });
+            // Filtrar solo productos de categoría 'tcg'
+            const tcgItems = allComics.filter(comic => 
+                comic.category === 'tcg' || comic.type === 'tcg'
+            );
             setItems(tcgItems);
         } catch (error) {
             console.error('Error cargando TCG:', error);

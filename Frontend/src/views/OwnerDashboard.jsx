@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AddComicForm from '../components/AddComicForm';
+import EditComicModal from '../components/EditComicModal';
+import StockManager from '../components/StockManager';
 
 const OwnerDashboard = () => {
     const [user, setUser] = useState(null);
     const [comics, setComics] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showAddForm, setShowAddForm] = useState(false);
+    const [selectedComic, setSelectedComic] = useState(null);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [viewMode, setViewMode] = useState('table'); // 'table' o 'cards'
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -20,7 +25,8 @@ const OwnerDashboard = () => {
         }
 
         const parsedUser = JSON.parse(userData);
-        if (parsedUser.role !== 'ADMIN') {
+        
+        if (parsedUser.role !== 'ADMIN' && parsedUser.role !== 'OWNER') {
             navigate('/user-dashboard');
             return;
         }
@@ -64,6 +70,12 @@ const OwnerDashboard = () => {
         setShowAddForm(false);
     };
 
+    const handleEditComic = (comic) => {
+        console.log('Editando comic:', comic);
+        setSelectedComic(comic);
+        setShowEditModal(true);
+    };
+
     const handleDeleteComic = async (comicId) => {
         if (window.confirm('¿Estás seguro de que quieres eliminar este cómic?')) {
             try {
@@ -86,6 +98,11 @@ const OwnerDashboard = () => {
     const handleLogout = () => {
         localStorage.removeItem('user');
         localStorage.removeItem('token');
+        localStorage.removeItem('currentUser');
+        
+        // Disparar evento de logout
+        window.dispatchEvent(new Event('userLoggedOut'));
+        
         navigate('/');
     };
 
@@ -130,49 +147,82 @@ const OwnerDashboard = () => {
                 <div style={styles.section}>
                     <div style={styles.sectionHeader}>
                         <h2 style={styles.sectionTitle}>📊 Gestión de Inventario</h2>
-                        <button 
-                            onClick={() => setShowAddForm(true)}
-                            style={styles.addBtn}
-                        >
-                            ➕ Agregar Cómic
-                        </button>
-                    </div>
-                    {comics.length > 0 ? (
-                        <div style={styles.comicsTable}>
-                            <div style={styles.tableHeader}>
-                                <span style={styles.headerCell}>Título</span>
-                                <span style={styles.headerCell}>Autor</span>
-                                <span style={styles.headerCell}>Precio</span>
-                                <span style={styles.headerCell}>Stock</span>
-                                <span style={styles.headerCell}>Acciones</span>
+                        <div style={styles.headerControls}>
+                            <div style={styles.viewToggle}>
+                                <button 
+                                    onClick={() => setViewMode('table')}
+                                    style={{
+                                        ...styles.toggleBtn,
+                                        backgroundColor: viewMode === 'table' ? '#3b82f6' : '#e5e7eb',
+                                        color: viewMode === 'table' ? 'white' : '#374151'
+                                    }}
+                                >
+                                    📋 Tabla
+                                </button>
+                                <button 
+                                    onClick={() => setViewMode('cards')}
+                                    style={{
+                                        ...styles.toggleBtn,
+                                        backgroundColor: viewMode === 'cards' ? '#3b82f6' : '#e5e7eb',
+                                        color: viewMode === 'cards' ? 'white' : '#374151'
+                                    }}
+                                >
+                                    🎴 Tarjetas
+                                </button>
                             </div>
-                            {comics.map(comic => (
-                                <div key={comic.id} style={styles.tableRow}>
-                                    <span style={styles.tableCell}>{comic.title}</span>
-                                    <span style={styles.tableCell}>{comic.author}</span>
-                                    <span style={styles.tableCell}>${comic.price}</span>
-                                    <span style={styles.tableCell}>
-                                        <span style={{
-                                            ...styles.stockBadge,
-                                            backgroundColor: comic.stock > 10 ? '#10b981' : comic.stock > 5 ? '#f59e0b' : '#ef4444'
-                                        }}>
-                                            {comic.stock}
-                                        </span>
-                                    </span>
-                                    <span style={styles.tableCell}>
-                                        <button style={styles.editBtn}>✏️ Editar</button>
-                                        <button 
-                                            style={styles.deleteBtn}
-                                            onClick={() => handleDeleteComic(comic.id)}
-                                        >
-                                            🗑️ Eliminar
-                                        </button>
-                                    </span>
-                                </div>
-                            ))}
+                            <button 
+                                onClick={() => setShowAddForm(true)}
+                                style={styles.addBtn}
+                            >
+                                ➕ Agregar Cómic
+                            </button>
                         </div>
+                    </div>
+                    {viewMode === 'table' ? (
+                        comics.length > 0 ? (
+                            <div style={styles.comicsTable}>
+                                <div style={styles.tableHeader}>
+                                    <span style={styles.headerCell}>Título</span>
+                                    <span style={styles.headerCell}>Autor</span>
+                                    <span style={styles.headerCell}>Precio</span>
+                                    <span style={styles.headerCell}>Stock</span>
+                                    <span style={styles.headerCell}>Acciones</span>
+                                </div>
+                                {comics.map(comic => (
+                                    <div key={comic.id} style={styles.tableRow}>
+                                        <span style={styles.tableCell}>{comic.title}</span>
+                                        <span style={styles.tableCell}>{comic.author}</span>
+                                        <span style={styles.tableCell}>${comic.price}</span>
+                                        <span style={styles.tableCell}>
+                                            <span style={{
+                                                ...styles.stockBadge,
+                                                backgroundColor: comic.stock > 10 ? '#10b981' : comic.stock > 5 ? '#f59e0b' : '#ef4444'
+                                            }}>
+                                                {comic.stock}
+                                            </span>
+                                        </span>
+                                        <span style={styles.tableCell}>
+                                            <button 
+                                                style={styles.editBtn}
+                                                onClick={() => handleEditComic(comic)}
+                                            >
+                                                ✏️ Editar
+                                            </button>
+                                            <button 
+                                                style={styles.deleteBtn}
+                                                onClick={() => handleDeleteComic(comic.id)}
+                                            >
+                                                🗑️ Eliminar
+                                            </button>
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p style={styles.noData}>No hay cómics en el inventario.</p>
+                        )
                     ) : (
-                        <p style={styles.noData}>No hay cómics en el inventario.</p>
+                        <StockManager />
                     )}
                 </div>
 
@@ -183,6 +233,18 @@ const OwnerDashboard = () => {
                     />
                 )}
             </div>
+
+            <EditComicModal
+                comic={selectedComic}
+                isVisible={showEditModal}
+                onClose={() => {
+                    setShowEditModal(false);
+                    setSelectedComic(null);
+                }}
+                onUpdate={() => {
+                    fetchComics();
+                }}
+            />
         </div>
     );
 };
@@ -282,6 +344,25 @@ const styles = {
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: '20px'
+    },
+    headerControls: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '15px'
+    },
+    viewToggle: {
+        display: 'flex',
+        border: '1px solid #e5e7eb',
+        borderRadius: '6px',
+        overflow: 'hidden'
+    },
+    toggleBtn: {
+        padding: '8px 16px',
+        border: 'none',
+        cursor: 'pointer',
+        fontSize: '14px',
+        fontWeight: '500',
+        transition: 'all 0.2s ease'
     },
     addBtn: {
         padding: '10px 20px',

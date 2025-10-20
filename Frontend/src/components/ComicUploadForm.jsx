@@ -70,6 +70,9 @@ const ComicUploadForm = ({ onProductAdded }) => {
             
             setMessage(`¡${categories.find(c => c.value === formData.category)?.label} agregado exitosamente!`);
             
+            // Disparar evento para notificar que se agregó un producto
+            window.dispatchEvent(new Event('productAdded'));
+            
             // Resetear formulario
             setFormData({
                 title: '',

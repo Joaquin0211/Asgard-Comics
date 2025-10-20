@@ -2,43 +2,43 @@
 export const defaultImages = {
   // Cómics
   comic: [
-    'https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=300&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1601645191163-3fc0d5d64e35?w=300&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1588497859490-85d1c17db96d?w=300&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=300&h=400&fit=crop',
+    'https://via.placeholder.com/300x400/1E40AF/FFFFFF?text=COMIC',
+    'https://via.placeholder.com/300x400/DC2626/FFFFFF?text=COMIC',
+    'https://via.placeholder.com/300x400/059669/FFFFFF?text=COMIC',
+    'https://via.placeholder.com/300x400/7C3AED/FFFFFF?text=COMIC',
+    'https://via.placeholder.com/300x400/EA580C/FFFFFF?text=COMIC',
   ],
   
   // Mangas
   manga: [
-    'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=300&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1618609378039-b572f64c5b42?w=300&h=400&fit=crop',
+    'https://via.placeholder.com/300x400/EF4444/FFFFFF?text=MANGA',
+    'https://via.placeholder.com/300x400/F59E0B/FFFFFF?text=MANGA',
+    'https://via.placeholder.com/300x400/10B981/FFFFFF?text=MANGA',
+    'https://via.placeholder.com/300x400/8B5CF6/FFFFFF?text=MANGA',
   ],
   
   // Figuras
   figura: [
-    'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=300&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1578662015016-bf4c5540d814?w=300&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=300&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1578662020965-ae4e1a2e5de0?w=300&h=400&fit=crop',
+    'https://via.placeholder.com/300x400/6366F1/FFFFFF?text=FIGURA',
+    'https://via.placeholder.com/300x400/EC4899/FFFFFF?text=FIGURA',
+    'https://via.placeholder.com/300x400/14B8A6/FFFFFF?text=FIGURA',
+    'https://via.placeholder.com/300x400/F97316/FFFFFF?text=FIGURA',
   ],
   
   // TCG/Cartas
   tcg: [
-    'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=300&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1578662015016-bf4c5540d814?w=300&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=300&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1578662020965-ae4e1a2e5de0?w=300&h=400&fit=crop',
+    'https://via.placeholder.com/300x400/3B82F6/FFFFFF?text=TCG',
+    'https://via.placeholder.com/300x400/EF4444/FFFFFF?text=TCG',
+    'https://via.placeholder.com/300x400/10B981/FFFFFF?text=TCG',
+    'https://via.placeholder.com/300x400/F59E0B/FFFFFF?text=TCG',
   ],
   
   // Merchandising
   merchandising: [
-    'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=300&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1556821840-3a9c6d1a4475?w=300&h=400&fit=crop',
-    'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=300&h=400&fit=crop',
+    'https://via.placeholder.com/300x400/6B7280/FFFFFF?text=MERCH',
+    'https://via.placeholder.com/300x400/DC2626/FFFFFF?text=MERCH',
+    'https://via.placeholder.com/300x400/059669/FFFFFF?text=MERCH',
+    'https://via.placeholder.com/300x400/7C3AED/FFFFFF?text=MERCH',
   ]
 };
 
@@ -66,17 +66,21 @@ export const getImageByTitle = (title, category = 'comic') => {
 // Imágenes específicas para productos populares
 export const specificImages = {
   // Comics populares
-  'Spider-Man': 'https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=300&h=400&fit=crop',
-  'Batman': 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=400&fit=crop',
-  'Superman': 'https://images.unsplash.com/photo-1601645191163-3fc0d5d64e35?w=300&h=400&fit=crop',
-  'Wonder Woman': 'https://images.unsplash.com/photo-1588497859490-85d1c17db96d?w=300&h=400&fit=crop',
-  'The Avengers': 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=300&h=400&fit=crop',
+  'Spider-Man': 'https://i.imgur.com/4YqNzTw.jpg',
+  'Batman': 'https://i.imgur.com/oA9rKQP.jpg',
+  'Superman': 'https://via.placeholder.com/300x400/DC2626/FFFFFF?text=SUPERMAN',
+  'Wonder Woman': 'https://i.imgur.com/gUKXhwm.jpg',
+  'The Avengers': 'https://i.imgur.com/VzNMd9L.jpg',
+  'X-Men': 'https://i.imgur.com/rJ9rKjR.jpg',
+  'Iron Man': 'https://i.imgur.com/d0SJdGh.jpg',
   
   // Mangas populares
-  'Naruto': 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=400&fit=crop',
-  'One Piece': 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=300&h=400&fit=crop',
-  'Dragon Ball': 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=300&h=400&fit=crop',
-  'Attack on Titan': 'https://images.unsplash.com/photo-1618609378039-b572f64c5b42?w=300&h=400&fit=crop',
+  'Naruto': 'https://i.imgur.com/k1LtqFl.jpg',
+  'One Piece': 'https://i.imgur.com/GhYgx2L.jpg',
+  'Dragon Ball': 'https://i.imgur.com/h8k6NlR.jpg',
+  'Attack on Titan': 'https://i.imgur.com/4YZDuMp.jpg',
+  'My Hero Academia': 'https://i.imgur.com/8Bc4XvG.jpg',
+  'Demon Slayer': 'https://i.imgur.com/dHk9QvS.jpg',
 };
 
 // Función principal para obtener imagen

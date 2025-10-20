@@ -35,6 +35,48 @@ const CategoryLayout = ({
     if (showProducts) {
       loadProducts();
     }
+
+    // Escuchar eventos de login/logout para recargar productos
+    const handleUserChange = () => {
+      if (showProducts) {
+        loadProducts();
+      }
+    };
+
+    // Escuchar cuando se agregue un producto nuevo
+    const handleProductAdded = () => {
+      if (showProducts) {
+        loadProducts();
+      }
+    };
+
+    // Escuchar cuando se actualice un producto
+    const handleProductUpdated = () => {
+      if (showProducts) {
+        loadProducts();
+      }
+    };
+
+    // Escuchar cuando se inicialicen datos de prueba
+    const handleDataInitialized = () => {
+      if (showProducts) {
+        loadProducts();
+      }
+    };
+
+    window.addEventListener('userLoggedIn', handleUserChange);
+    window.addEventListener('userLoggedOut', handleUserChange);
+    window.addEventListener('productAdded', handleProductAdded);
+    window.addEventListener('productUpdated', handleProductUpdated);
+    window.addEventListener('dataInitialized', handleDataInitialized);
+
+    return () => {
+      window.removeEventListener('userLoggedIn', handleUserChange);
+      window.removeEventListener('userLoggedOut', handleUserChange);
+      window.removeEventListener('productAdded', handleProductAdded);
+      window.removeEventListener('productUpdated', handleProductUpdated);
+      window.removeEventListener('dataInitialized', handleDataInitialized);
+    };
   }, [showProducts, filterType]);
 
   const loadProducts = async () => {
@@ -50,23 +92,10 @@ const CategoryLayout = ({
       let filteredItems = allComics;
 
       // Aplicar filtros según el tipo de categoría
-      if (filterType === 'manga') {
+      if (filterType) {
+        // Filtrar por categoría usando la propiedad category del producto
         filteredItems = allComics.filter(comic => 
-          comic && comic.title && comic.author &&
-          (comic.title.toLowerCase().includes('dragon ball') ||
-          comic.title.toLowerCase().includes('one piece') ||
-          comic.author.toLowerCase().includes('akira') ||
-          comic.author.toLowerCase().includes('eiichiro'))
-        );
-      } else if (filterType === 'superhero') {
-        filteredItems = allComics.filter(comic =>
-          comic && comic.title &&
-          (comic.title.toLowerCase().includes('spider') ||
-          comic.title.toLowerCase().includes('batman') ||
-          comic.title.toLowerCase().includes('x-men') ||
-          comic.title.toLowerCase().includes('avengers') ||
-          comic.title.toLowerCase().includes('iron') ||
-          comic.title.toLowerCase().includes('wonder woman'))
+          comic && comic.category === filterType
         );
       } else if (customFilter && typeof customFilter === 'function') {
         try {

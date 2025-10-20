@@ -3,6 +3,8 @@ import { updateComic } from '../services/api';
 import './EditComicModal.css';
 
 function EditComicModal({ comic, isVisible, onClose, onUpdate }) {
+  console.log('EditComicModal renderizado con props:', { comic, isVisible });
+  
   const [editData, setEditData] = useState({
     title: '',
     author: '',
@@ -16,6 +18,7 @@ function EditComicModal({ comic, isVisible, onClose, onUpdate }) {
 
   useEffect(() => {
     if (comic && isVisible) {
+      console.log('Modal recibió comic:', comic);
       setEditData({
         title: comic.title || '',
         author: comic.author || '',
@@ -69,6 +72,10 @@ function EditComicModal({ comic, isVisible, onClose, onUpdate }) {
       await updateComic(comic.id, updatedComic);
       
       alert('Producto actualizado exitosamente');
+      
+      // Disparar evento para notificar que se editó un producto
+      window.dispatchEvent(new Event('productUpdated'));
+      
       onUpdate(); // Callback para refrescar la lista
       onClose();
     } catch (error) {

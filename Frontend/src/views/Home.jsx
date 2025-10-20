@@ -6,7 +6,12 @@ import Figures from '../components/sections/Figures';
 import Promotions from '../components/sections/Promotions';
 import Comics from '../components/sections/Comics';
 import TradingCards from '../components/sections/TradingCards';
+import { getComics, createComic } from '../services/api';
+import { initialProducts } from '../data/initialProducts';
+import axios from 'axios';
 import './Home.css';
+
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8080/api';
 
 const Home = () => {
     const [isCreating, setIsCreating] = useState(false);
@@ -16,6 +21,22 @@ const Home = () => {
     // Cargar estado al montar el componente
     useEffect(() => {
         checkDataStatus();
+
+        // Escuchar eventos de login/logout para recargar estado
+        const handleUserChange = () => {
+            checkDataStatus();
+            // Forzar actualización de componentes hijos
+            setDataStatus(''); // Reset temporal para forzar re-render
+            setTimeout(() => checkDataStatus(), 100);
+        };
+
+        window.addEventListener('userLoggedIn', handleUserChange);
+        window.addEventListener('userLoggedOut', handleUserChange);
+
+        return () => {
+            window.removeEventListener('userLoggedIn', handleUserChange);
+            window.removeEventListener('userLoggedOut', handleUserChange);
+        };
     }, []);
 
     const checkDataStatus = async () => {
@@ -30,16 +51,129 @@ const Home = () => {
 
     const createTestData = async () => {
         setIsCreating(true);
+        setMessage('Creando datos de prueba...');
         try {
-            const response = await fetch('http://localhost:8080/api/test/create-sample-data', {
-                method: 'POST'
-            });
-            const result = await response.text();
-            setMessage(result);
-            // Actualizar estado después de crear datos
+            // Usar los datos de initialProducts.js
+            for (let i = 0; i < initialProducts.length; i++) {
+                const product = initialProducts[i];
+                try {
+                    await createComic(product);
+                    setMessage(`Creando: ${product.title} (${i + 1}/${initialProducts.length})`);
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                } catch (error) {
+                    console.log(`Producto ya existe: ${product.title}`);
+                }
+            }
+            setMessage(`¡Datos creados exitosamente! ${initialProducts.length} productos agregados.`);
+            
+            // Disparar evento para notificar cambios
+            window.dispatchEvent(new Event('dataInitialized'));
             await checkDataStatus();
         } catch (error) {
             setMessage('Error creando datos: ' + error.message);
+        } finally {
+            setIsCreating(false);
+        }
+    };
+
+    const clearAllData = async () => {
+        setIsCreating(true);
+        setMessage('Limpiando base de datos...');
+        try {
+            const allComics = await getComics();
+            for (const comic of allComics) {
+                try {
+                    await axios.delete(`${API_BASE}/comics/${comic.id}`);
+                } catch (error) {
+                    console.log(`Error eliminando ${comic.title}:`, error);
+                }
+            }
+            setMessage('¡Base de datos limpiada exitosamente!');
+            window.dispatchEvent(new Event('dataInitialized'));
+            await checkDataStatus();
+        } catch (error) {
+            setMessage('Error limpiando datos: ' + error.message);
+        } finally {
+            setIsCreating(false);
+        }
+    };
+
+    const createTestUsers = async () => {
+        setIsCreating(true);
+        setMessage('Creando usuarios de prueba...');
+        try {
+            // Crear usuario admin
+            const adminUser = {
+                name: "Admin",
+                email: "admin@asgard.com", 
+                password: "admin123",
+                role: "ADMIN"
+            };
+            
+            // Crear usuarios regulares
+            const user1 = {
+                name: "Juan Pérez",
+                email: "juan@email.com",
+                password: "user123", 
+                role: "USER"
+            };
+            
+            const user2 = {
+                name: "María García",
+                email: "maria@email.com",
+                password: "user123",
+                role: "USER"
+            };
+
+            const user3 = {
+                name: "Pedro López",
+                email: "pedro@email.com",
+                password: "user123",
+                role: "USER"
+            };
+
+            // Intentar crear cada usuario
+            const users = [adminUser, user1, user2, user3];
+            let createdCount = 0;
+            
+            for (const user of users) {
+                try {
+                    await axios.post(`${API_BASE}/auth/register`, user);
+                    createdCount++;
+                    setMessage(`Creando usuario: ${user.name} (${createdCount}/${users.length})`);
+                } catch (error) {
+                    console.log(`Usuario ya existe o error: ${user.email}`, error.response?.data || error.message);
+                }
+            }
+            
+            setMessage(`¡Usuarios creados exitosamente! ${createdCount} usuarios agregados.`);
+            await checkDataStatus();
+        } catch (error) {
+            setMessage('Error creando usuarios: ' + error.message);
+        } finally {
+            setIsCreating(false);
+        }
+    };
+
+    const fixAdminRole = async () => {
+        setIsCreating(true);
+        setMessage('Corrigiendo rol de admin...');
+        try {
+            // Primero, eliminar el usuario admin actual (si existe)
+            const allUsers = await axios.get(`${API_BASE}/test/users`);
+            const adminUser = allUsers.data.find(user => user.email === 'admin@asgard.com');
+            
+            if (adminUser) {
+                await axios.delete(`${API_BASE}/users/${adminUser.id}`);
+            }
+            
+            // Crear nuevo usuario admin con rol correcto usando el endpoint de test
+            await axios.post(`${API_BASE}/test/create-sample-data`);
+            
+            setMessage('¡Rol de admin corregido! Por favor, cierra sesión y vuelve a iniciar sesión.');
+        } catch (error) {
+            console.error('Error corrigiendo rol:', error);
+            setMessage('Error corrigiendo rol. Intenta reiniciar el backend y usar "Crear Usuarios" nuevamente.');
         } finally {
             setIsCreating(false);
         }
@@ -68,6 +202,27 @@ const Home = () => {
                             style={quickAccessStyles.button}
                         >
                             {isCreating ? '⏳ Creando...' : '📦 Crear Datos de Prueba'}
+                        </button>
+                        <button 
+                            onClick={createTestUsers} 
+                            disabled={isCreating}
+                            style={{...quickAccessStyles.button, backgroundColor: '#17a2b8'}}
+                        >
+                            {isCreating ? '⏳ Creando...' : '👥 Crear Usuarios'}
+                        </button>
+                        <button 
+                            onClick={fixAdminRole} 
+                            disabled={isCreating}
+                            style={{...quickAccessStyles.button, backgroundColor: '#ffc107', color: '#000'}}
+                        >
+                            {isCreating ? '⏳ Corrigiendo...' : '🔧 Corregir Admin'}
+                        </button>
+                        <button 
+                            onClick={clearAllData} 
+                            disabled={isCreating}
+                            style={{...quickAccessStyles.button, backgroundColor: '#dc3545'}}
+                        >
+                            {isCreating ? '⏳ Limpiando...' : '🗑️ Limpiar Base de Datos'}
                         </button>
                         <Link to="/price-filter" style={quickAccessStyles.link}>
                             🔍 Filtrar por Precio

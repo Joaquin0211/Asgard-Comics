@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { getComics, deleteComic } from '../services/api';
+import { getProductImage } from '../utils/imageUtils';
 import EditComicModal from './EditComicModal';
 import ComicUploadForm from './ComicUploadForm';
 import DataInitializer from './DataInitializer';
 import './StockManager.css';
 
 const StockManager = () => {
+    console.log('StockManager se está renderizando');
+    
     const [comics, setComics] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -22,6 +25,7 @@ const StockManager = () => {
         setLoading(true);
         try {
             const data = await getComics();
+            console.log('Cómics cargados:', data);
             setComics(data);
             setError(null);
         } catch (err) {
@@ -33,6 +37,7 @@ const StockManager = () => {
     };
 
     const handleEdit = (comic) => {
+        console.log('Editando comic:', comic);
         setSelectedComic(comic);
         setShowEditModal(true);
     };
@@ -122,9 +127,13 @@ const StockManager = () => {
                             filteredComics.map(comic => (
                                 <div key={comic.id} className="product-card">
                                     <img 
-                                        src={comic.imageUrl || 'https://via.placeholder.com/150x200'} 
+                                        src={getProductImage(comic.title, comic.category, comic.imageUrl)} 
                                         alt={comic.title}
                                         className="product-image"
+                                        onError={(e) => {
+                                            e.target.src = getProductImage(comic.title, comic.category);
+                                        }}
+                                        loading="lazy"
                                     />
                                     <div className="product-info">
                                         <h3 className="product-title">{comic.title}</h3>
@@ -144,7 +153,11 @@ const StockManager = () => {
                                     </div>
                                     <div className="product-actions">
                                         <button 
-                                            onClick={() => handleEdit(comic)}
+                                            onClick={(e) => {
+                                                console.log('Click en botón detectado!', comic);
+                                                e.preventDefault();
+                                                handleEdit(comic);
+                                            }}
                                             className="edit-btn"
                                         >
                                             ✏️ Editar

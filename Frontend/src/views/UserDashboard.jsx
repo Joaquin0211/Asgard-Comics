@@ -42,6 +42,11 @@ const UserDashboard = () => {
     const handleLogout = () => {
         localStorage.removeItem('user');
         localStorage.removeItem('token');
+        localStorage.removeItem('currentUser');
+        
+        // Disparar evento de logout
+        window.dispatchEvent(new Event('userLoggedOut'));
+        
         navigate('/');
     };
 
